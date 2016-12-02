@@ -9,14 +9,133 @@
 import UIKit
 import CoreData
 
+import Firebase
+import FirebaseInstanceID
+import FirebaseMessaging
+
+import UserNotifications
+import BRYXBanner
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate  {
 
     var window: UIWindow?
+    
+    func showLoginUsuario(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let login = storyboard.instantiateViewController(withIdentifier: "ncLogin")
+        window?.rootViewController = login
+    }
+    
+    func showLoginPolicia(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let login = storyboard.instantiateViewController(withIdentifier: "ncLoginPnp")
+        window?.rootViewController = login
+    }
+    
+    func showAppUsuario(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let app = storyboard.instantiateViewController(withIdentifier: "ncAlert")
+        window?.rootViewController = app
+    }
+    
+    func showAppPolicia(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let app = storyboard.instantiateViewController(withIdentifier: "ncListado")
+        window?.rootViewController = app
+    }
+    
+    
+    
+    func setNavigationColor(){
+        let navigationBarAppearace = UINavigationBar.appearance()
+        
+        navigationBarAppearace.tintColor = UIColor.white
+        navigationBarAppearace.barTintColor = UIColor(red: 174/255.0, green: 3/255.0, blue: 3/255.0, alpha: 1.0)
+        
+        // change navigation item title color
+        navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white]
+    }
+    
+    func setPage(){
+       
+        if UsuarioModel.isAvailable(){
+            let Usuario = UsuarioModel.getUsuario()
+            let tipo = Usuario?.tip_id
+            
+            if(tipo == 1){
+                showAppUsuario()
+            }else{
+                showAppPolicia()
+
+            }
+            
+        }else{
+            
+            showLoginUsuario()
+            
+            
+        }
+       
+    }
+    
+    
+    func registerForPushNotifications(application: UIApplication) {
+        FIRApp.configure()
+        
+        if #available(iOS 10.0, *) {
+           
+            
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+                // Enable or disable features based on authorization.
+            }
+            
+        } else {
+            // Fallback on earlier versions
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
+        }
+        
+        application.registerForRemoteNotifications()
+        
+        // Add observer for InstanceID token refresh callback.
+        NotificationCenter.default.addObserver(self,
+                                                         selector: #selector(self.tokenRefreshNotification),
+                                                         name: NSNotification.Name.firInstanceIDTokenRefresh,
+                                                         object: nil)
+    }
+    
+    func tokenRefreshNotification(notification: NSNotification) {
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+        }
+        
+        connectToFcm()
+    }
+    func connectToFcm() {
+        FIRMessaging.messaging().connect { (error) in
+            if (error != nil) {
+                print("Unable to connect with FCM. \(error)")
+            } else {
+                print("Connected to FCM.")
+            }
+        }
+    }
+    
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        IQKeyboardManager.sharedManager().enable = true
+        IQKeyboardManager.sharedManager().enableAutoToolbar = false
+        
+        setPage()
+        
+        setNavigationColor()
+        registerForPushNotifications(application: application)
+        
         return true
     }
 
@@ -28,6 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        FIRMessaging.messaging().disconnect()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -36,6 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        connectToFcm()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -88,6 +209,118 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+        var token = ""
+        for i in 0..<deviceToken.count {
+            token = token + String(format: "%02.2hhx", arguments: [deviceToken[i]])
+        }
+        
+        //Tricky line
+        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.sandbox)
+        print("Device Token:", token)
+        
+        updateToken(tokenString: token)
+        
+        
+    }
+    
+    func updateToken(tokenString: String){
+        let usuario = UsuarioModel.getUsuario()
+        let tipo = usuario?.tip_id
+        let token = usuario?.token
+
+        if (tipo == 2){
+            if( token != tokenString){
+                ModelHelper.saveToken(token: tokenString)
+                UsuarioModel.updateToken(token: tokenString)
+            }
+            
+            
+        }else if(tipo == nil){
+            ModelHelper.createToken(token: tokenString)
+        }
+        
+    }
+    
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        
+        print("i am not available in simulator \(error)")
+        
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    
+        print("===== didReceiveRemoteNotification ===== %@", userInfo)
+        
+        
+        completionHandler(UIBackgroundFetchResult.newData)
+        ModelHelper.updateWithPushNotification()
+        
+        if ( application.applicationState == UIApplicationState.active ){
+            let banner = Banner(title : "SEGURIDAD CHULUCANAS", subtitle: "ALERTA DE SEGURIDAD", image: nil , backgroundColor: UIColor.red)
+            banner.dismissesOnTap = true
+            banner.show()
+            
+            
+            
+            if let rootViewController = window?.rootViewController as? UINavigationController{
+                if let viewcontroller = rootViewController.viewControllers.first as? ListadoTableViewController{
+                    viewcontroller.checkNotification()
+                }
+            }
+            
+            
+        }
+        
+        
+        
+    }
+    
+    
+    
+    
+    /*func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("Complete");
+        completionHandler(UIBackgroundFetchResult.newData)
+    }*/
+    
+    
+
+    
+    
+    
 
 }
 
+
+// [START ios_10_message_handling]
+@available(iOS 10, *)
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    // Receive displayed notifications for iOS 10 devices.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(UNNotificationPresentationOptions.alert)
+        print("Aqui")
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        // Print message ID.
+        print("Message ID: \(userInfo["gcm.message_id"]!)")
+        // Print full message.
+        print(userInfo)
+    }
+}
+// [END ios_10_message_handling]
+// [START ios_10_data_message_handling]
+extension AppDelegate : FIRMessagingDelegate {
+    // Receive data message on iOS 10 devices while app is in the foreground.
+    func applicationReceivedRemoteMessage(_ remoteMessage: FIRMessagingRemoteMessage) {
+        print(remoteMessage.appData)
+    }
+}
+// [END ios_10_data_message_handling]

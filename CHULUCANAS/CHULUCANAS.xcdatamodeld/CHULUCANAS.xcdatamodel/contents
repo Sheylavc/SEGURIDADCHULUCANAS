@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="15G1108" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Alerta" representedClassName="Alerta" syncable="YES" codeGenerationType="class">
+        <attribute name="ale_descripcion" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ale_estado" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ale_fec" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ale_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ale_latitud" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ale_longitud" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ale_tipo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_ape_mat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_ape_pat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_celular" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_correo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_dni" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="usu_nombre" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Usuario" representedClassName="Usuario" syncable="YES" codeGenerationType="class">
+        <attribute name="tip_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="token" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_ape_mat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_ape_pat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_correo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="usu_nombre" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usu_token" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Alerta" positionX="-36" positionY="9" width="128" height="255"/>
+        <element name="Usuario" positionX="-63" positionY="-18" width="128" height="180"/>
+    </elements>
 </model>
