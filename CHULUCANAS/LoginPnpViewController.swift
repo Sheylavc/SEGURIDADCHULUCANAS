@@ -53,14 +53,14 @@ class LoginPnpViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: GENERAL FUNCTION
     func getUser(){
-        ModelHelper.loginPnp(email: "prueba@hotmail.com", password: "1234" , viewcontroller: self)
-        /*if(txtUsuario.text?.characters.count != 0 && txtUsuario.text?.characters.count != 0){
-            //ModelHelper.login(email: txtUsuario.text , password: txtPassword.text , viewcontroller: self)
+        //ModelHelper.loginPnp(email: "prueba@hotmail.com", password: "1234" , viewcontroller: self)
+        if(txtUsuario.text?.characters.count != 0 && txtUsuario.text?.characters.count != 0){
+            ModelHelper.loginPnp(email: txtUsuario.text , password: txtPassword.text , viewcontroller: self)
             
-            ModelHelper.login(email: "prueba@hotmail.com", password: "1234" , viewcontroller: self)
+            //ModelHelper.login(email: "prueba@hotmail.com", password: "1234" , viewcontroller: self)
         }else{
             AlertHelper.notificationAlert(title: "SEGURIDAD CHULUCANAS", message: "Todos los campos son requeridos", viewController: self)
-        }*/
+        }
         
         
     }

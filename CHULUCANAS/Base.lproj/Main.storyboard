@@ -638,6 +638,9 @@
                                 <state key="normal" title="¿OLVIDÓ SU CONTRASEÑA?">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="0Cm-2K-FRQ" kind="show" id="FxJ-J9-ohf"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="policia" translatesAutoresizingMaskIntoConstraints="NO" id="oVL-Xn-j3W">
                                 <rect key="frame" x="20" y="105" width="280" height="254"/>
@@ -1678,4 +1681,7 @@
         <image name="policia" width="250" height="250"/>
         <image name="restablecer" width="200" height="200"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="FxJ-J9-ohf"/>
+    </inferredMetricsTieBreakers>
 </document>

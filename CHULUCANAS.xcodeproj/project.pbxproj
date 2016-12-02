@@ -552,6 +552,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5521826DF424F0034C93B33B /* Pods-CHULUCANAS.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CHULUCANAS/CHULUCANAS.entitlements;
 				DEVELOPMENT_TEAM = 9C58VTE36H;
@@ -568,6 +569,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 122677A2EE801C2C8279602D /* Pods-CHULUCANAS.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CHULUCANAS/CHULUCANAS.entitlements;
 				DEVELOPMENT_TEAM = 9C58VTE36H;

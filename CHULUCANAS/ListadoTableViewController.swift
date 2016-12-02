@@ -51,7 +51,7 @@ class ListadoTableViewController: UITableViewController {
     func orderArray(){
         registrosAlerta = AlertaModel.getAlertas()
         registrosAlerta.sort {(alert1:Alerta, alert2:Alerta) -> Bool in
-            alert1.ale_id < alert2.ale_id
+            alert1.ale_id > alert2.ale_id
         }
     }
 
@@ -139,8 +139,7 @@ class ListadoTableViewController: UITableViewController {
                 do{
                     let dic = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! [String: AnyObject]
                     print(dic)
-                    
-                    
+
                     let response = dic["success"] as! Int
                     DispatchQueue.main.async {
                         if response == 1{

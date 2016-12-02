@@ -67,7 +67,7 @@ public extension UIView {
             if let toolbar = self.inputAccessoryView as? IQToolbar {
                 if self.responds(to: #selector(getter: UITextField.placeholder)) {
                     let textField = self as AnyObject
-                    toolbar.title = textField.drawingPlaceholderText
+                    //toolbar.title = textField.drawingPlaceholderText
                 }
             }
         }
@@ -88,7 +88,7 @@ public extension UIView {
             if let toolbar = self.inputAccessoryView as? IQToolbar {
                 if self.responds(to: #selector(getter: UITextField.placeholder)) {
                     let textField = self as AnyObject
-                    toolbar.title = textField.drawingPlaceholderText
+                    //toolbar.title = textField.drawingPlaceholderText
                 }
             }
         }

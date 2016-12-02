@@ -288,7 +288,13 @@ class ModelHelper: NSObject {
         let usuario = UsuarioModel.getUsuario()
         let idUsuario =  usuario?.usu_id
         
-        let parameters = "id=\(idUsuario!)&longitud=\(longitud!)&latitud=\(latitud!)"
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let result = formatter.string(from: date)
+        
+        
+        let parameters = "id=\(idUsuario!)&longitud=\(longitud!)&latitud=\(latitud!)&ale_fec=\(result)"
         //print(parameters)
         let session = URLSession.shared
         let request = NSMutableURLRequest(url: NSURL(string: DataURL.GlobalVariables.sendAlerta )! as URL)
